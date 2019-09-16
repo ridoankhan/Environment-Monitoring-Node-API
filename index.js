@@ -39,7 +39,7 @@ app.use((req, res, next) => {                   //Handling Cors Error Started
     next();
 });                     
 
-app.get('/', (req, res, next) => {              // Send message for default URL
+app.get('/', (req, res, next) => {              // Handling Request for Default Route
     res.status(200).json({
         status: '200',
         message: 'APIs root url is working perfectly'
@@ -47,10 +47,10 @@ app.get('/', (req, res, next) => {              // Send message for default URL
     console.log("APIs root url is working perfectly");
 });
 
-app.use('/api', apiRoutes);                     //Using apiRoutes variables in application
+app.use('/api', apiRoutes);                     //Middleware for Forwarding Requests to apiRoutes = ./routes/api-routes
 
 app.use((req, res, next) => {                   //Handling Error for wrong URL request
-    const error = new Error('Not found');
+    const error = new Error('Page Not Found');
     error.status = 404;
     next(error);
 })
