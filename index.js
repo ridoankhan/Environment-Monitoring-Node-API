@@ -44,19 +44,20 @@ app.use((req, res, next) => {
 // mongoose.connect('mongodb://localhost/resthub', { useNewUrlParser: true});
 mongoose.connect('mongodb+srv://node-shop:' + process.env.MONGO_ATLAS_PW +'@node-rest-shop-ucqf6.mongodb.net/test?retryWrites=true&w=majority',
  { 
-	useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true 
  });
 
 var db = mongoose.connection;
 
 // Added check for DB connection
 if(!db)
-    console.log("Error connecting db");
+    console.log("Error Connecting Db");
 else
-    console.log("Db connected successfully");
+    console.log("Db Connected Successfully");
 
 // Setup server port
-var port = process.env.PORT || 3000;
+// var port = process.env.PORT || 3000;
 
 // Send message for default URL
 app.get('/', (req, res, next) => {
@@ -84,7 +85,6 @@ app.use((error, req, res, next) => {
         }
     });
 });
-// Launch app to listen to specified port
-app.listen(port, function () {
-    console.log("Running RestHub on port " + port);
-});
+
+module.exports = app;
+
