@@ -1,4 +1,3 @@
-// channelModel.js
 var mongoose = require('mongoose');// Setup schema
 var channelSchema = mongoose.Schema({
     field1: {
@@ -33,10 +32,9 @@ var channelSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     }
-});// Export channel model
+});
 
-
-var Channel = module.exports = mongoose.model('channel', channelSchema);
+var Channel = module.exports = mongoose.model('channel', channelSchema); // Export Channel Model
 
 module.exports.get = function (callback, limit) {
     Channel.find(callback).limit(limit);

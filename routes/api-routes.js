@@ -1,28 +1,24 @@
-//Initialize express router
-let express = require('express');
-let router = express.Router();// Set default API response
-router.get('/', function (req, res, next) {
-    
+let express = require('express');       
+let router = express.Router();
+
+router.get('/', function (req, res, next) {                      // Defining Message for route /api
     res.status(200).json({
-        status: 'route /api is working',
-        message: 'Environment Monitoring Device',
+        status: '200',
+        message: 'Environment Monitoring Device route /api is working'
     });
     console.log('route /api is working');
 });
 
-// Import channel controller
+var channelController = require('../controllers/channelController');    // Importing channelController
 
-var channelController = require('../controllers/channelController');
-
-// channel routes
-router.route('/channels')
-    .get(channelController.index)
-    .post(channelController.new);
+router.route('/channels')                      // Routing to Respective Functions in channelController                                        
+    .get(channelController.showAllRecords)
+    .post(channelController.createNewRecord);
     
 router.route('/channel/:channel_id')
-    .get(channelController.view)
-    .patch(channelController.update)
-    .put(channelController.update)
-    .delete(channelController.delete);// Export API routes
+    .get(channelController.viewSingleData)
+    .patch(channelController.updateSingleData)
+    .put(channelController.updateSingleData)
+    .delete(channelController.deleteSingleData);
     
-module.exports = router;
+module.exports = router;                                                

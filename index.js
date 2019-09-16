@@ -1,29 +1,32 @@
-// Import express
-let express = require('express');
-// Import Body parser
-let bodyParser = require('body-parser');
-// Import Mongoose
-let mongoose = require('mongoose');
-//Import Morgan
-let morgan = require('morgan');
+let express = require('express');               // Import express
+let bodyParser = require('body-parser');        // Import Body parser
+let mongoose = require('mongoose');             //Import Mongoose
+let morgan = require('morgan');                 //Import Morgan
+let app = express();                            //Initilize the App
 
-// Initialise the app
-let app = express();
+let apiRoutes = require("./routes/api-routes"); //Import api-routes
 
-// Import routes
-let apiRoutes = require("./routes/api-routes");
-// Configure bodyparser to handle post requests
+mongoose.connect('mongodb+srv://node-shop:' + process.env.MONGO_ATLAS_PW +'@node-rest-shop-ucqf6.mongodb.net/test?retryWrites=true&w=majority',
+ {                                            
+    useNewUrlParser: true,
+    useUnifiedTopology: true 
+ });
+let db = mongoose.connection;
 
-//Use Morgan
-app.use(morgan('dev'));
-//Use body-parser
+if(!db)                                         // Added Check for DB Connection
+    console.log("Error Connecting Db");
+else
+    console.log("Db Connected Successfully");
+
+app.use(morgan('dev'));                         //Use Morgan
+
 app.use(bodyParser.urlencoded({
     extended: false
-}));
-app.use(bodyParser.json());
+}));                                            // Using Body-Parser to Handle Post Requests
 
-//Handling Cors Error Started
-app.use((req, res, next) => {
+app.use(bodyParser.json());                     // Configuring Body-Parser to Send JSON Data
+
+app.use((req, res, next) => {                   //Handling Cors Error Started
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",
@@ -34,33 +37,9 @@ app.use((req, res, next) => {
         return res.status(200).json({});
     }
     next();
-  });
+});                     
 
-//Handling Cors Error Ended
-
-
-// Connect to Mongoose and set connection variable
-
-// mongoose.connect('mongodb://localhost/resthub', { useNewUrlParser: true});
-mongoose.connect('mongodb+srv://node-shop:' + process.env.MONGO_ATLAS_PW +'@node-rest-shop-ucqf6.mongodb.net/test?retryWrites=true&w=majority',
- { 
-    useNewUrlParser: true,
-    useUnifiedTopology: true 
- });
-
-var db = mongoose.connection;
-
-// Added check for DB connection
-if(!db)
-    console.log("Error Connecting Db");
-else
-    console.log("Db Connected Successfully");
-
-// Setup server port
-// var port = process.env.PORT || 3000;
-
-// Send message for default URL
-app.get('/', (req, res, next) => {
+app.get('/', (req, res, next) => {              // Send message for default URL
     res.status(200).json({
         status: '200',
         message: 'APIs root url is working perfectly'
@@ -68,10 +47,9 @@ app.get('/', (req, res, next) => {
     console.log("APIs root url is working perfectly");
 });
 
-// Use Api routes in the App
-app.use('/api', apiRoutes);
+app.use('/api', apiRoutes);                     //Using apiRoutes variables in application
 
-app.use((req, res, next) => {
+app.use((req, res, next) => {                   //Handling Error for wrong URL request
     const error = new Error('Not found');
     error.status = 404;
     next(error);
