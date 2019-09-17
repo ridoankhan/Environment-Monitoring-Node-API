@@ -1,25 +1,62 @@
 Channel = require('../models/channelModel');            //Import Channel Model 
 
-exports.showAllRecords = function (req, res, next) {   // Show All Records Function
-    Channel.get(function (err, channels) {
-        if (err) {
-            res.send(err);
-            res.status(404).json({
-                status: '404',
-                message: 'Failed to Retrieve Records'
-            });
-            next(err);
-        } else {
-            res.status(200).json({
-                status: "success",
-                message: "All Records Retrieved Successfully",
-                data: channels
-            });
-            console.log("All Records Retrieved Successfully");
-        }
+exports.showAllRecords = (req, res, next) => {
+    Channel.find()
+      .select("_id create_date field1 field2 field3 field4 field5 field6 field7")
+      .exec()
+      .then(docs => {
+        const response = {
+          
+          channel: docs.map(doc => {
+            return {
+              _id: doc._id,
+              create_date: doc.create_date,
+              field1: doc.field1,
+              field2: doc.field2,
+              field3:doc.field3,
+              field4:doc.field4,
+              field5:doc.field5,
+              field6: doc.field6,
+              field7: doc.field7
+            //   request: {
+            //     type: "GET",
+            //     url: "https://localhost:3000/api/channels"
+            //   }
+            };
+          })
+        };
+      
+        res.status(200).json(response);
+    
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({
+          error: err
+        });
+      });
+  };
 
-    });
-};
+// exports.showAllRecords = function (req, res, next) {   // Show All Records Function
+//     Channel.get(function (err, channels) {
+//         if (err) {
+//             res.send(err);
+//             res.status(404).json({
+//                 status: '404',
+//                 message: 'Failed to Retrieve Records'
+//             });
+//             next(err);
+//         } else {
+//             res.status(200).json({
+//                 status: "success",
+//                 message: "All Records Retrieved Successfully",
+//                 data: channels
+//             });
+//             console.log("All Records Retrieved Successfully");
+//         }
+
+//     });
+// }
 
 exports.createNewRecord = function (req, res, next) {   // POST New Data Set Function
     var channel = new Channel();
@@ -47,7 +84,7 @@ exports.createNewRecord = function (req, res, next) {   // POST New Data Set Fun
             console.log("New Record Created into the API");
         }
     });
-};
+}
 
 exports.viewSingleData = function (req, res, next) {    //Show Data for Single Record Function
     Channel.findById(req.params.channel_id, function (err, channel) {
@@ -65,7 +102,7 @@ exports.viewSingleData = function (req, res, next) {    //Show Data for Single R
             console.log("Requested Record Details");
         }
     });
-};
+}
 
 exports.updateSingleData = function (req, res, next) {   //Update Recoord Information Function
     Channel.findById(req.params.channel_id, function (err, channel) {
@@ -99,7 +136,7 @@ exports.updateSingleData = function (req, res, next) {   //Update Recoord Inform
             });
         }
     });
-};
+}
 
 exports.deleteSingleData = function (req, res, next) {  // Delete Record Function
     Channel.deleteOne({
@@ -119,4 +156,4 @@ exports.deleteSingleData = function (req, res, next) {  // Delete Record Functio
             console.log("Deleted Successfully");
         }
     });
-};
+}

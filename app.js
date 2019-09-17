@@ -1,10 +1,11 @@
 let express = require('express');               // Import express
 let bodyParser = require('body-parser');        // Import Body parser
+const cors = require('cors');                   // Import Cors
 let mongoose = require('mongoose');             //Import Mongoose
 let morgan = require('morgan');                 //Import Morgan
 let app = express();                            //Initilize the App
 
-let apiRoutes = require("./routes/api-routes"); //Import api-routes
+let apiRoutes = require("./api/routes/api-routes"); //Import api-routes
 
 mongoose.connect('mongodb+srv://node-shop:' + process.env.MONGO_ATLAS_PW +'@node-rest-shop-ucqf6.mongodb.net/test?retryWrites=true&w=majority',
  {                                            
@@ -17,6 +18,8 @@ if(!db)                                         // Added Check for DB Connection
     console.log("Error Connecting Db");
 else
     console.log("Db Connected Successfully");
+
+app.use(cors());
 
 app.use(morgan('dev'));                         //Use Morgan
 
@@ -53,7 +56,7 @@ app.use((req, res, next) => {                   //Handling Error for wrong URL r
     const error = new Error('Page Not Found');
     error.status = 404;
     next(error);
-})
+});
 
 app.use((error, req, res, next) => {
     res.status(error.status || 500);

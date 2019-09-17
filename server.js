@@ -1,10 +1,10 @@
 const http = require('http');
-const app = require('./index');
+const app = require('./app');
 
 const port = process.env.PORT || 3000;
 
 const server = http.createServer(app);
 
 server.listen(port, function () {
-    console.log("Running Environment Monitoring API on Port No: " + port);
+    console.log("To Environment Monitoring API, Click the Link: http://localhost:" + port);
 });
